@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>利息計算機</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: rgb(214, 255, 236);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      text-align: left;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      text-align: center;
+    }
+
+    button {
+      width: 100px;
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    table {
+      border-collapse: collapse;
+      border: 1px solid;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid;
+      padding: 8px;
+      text-align: center;
+    }
+
+    td {
+      background-color: rgb(255, 255, 255);
+    }
+
+    thead {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>貸款計算機</h1>
+
+  <form action="">
+    <label for="principal">本金 (元):</label>
+    <input type="number" id="principal" name="principal" required placeholder="1000000">
+    <br>
+    <label for="rate">年利率 (%):</label>
+    <input type="number" id="rate" name="rate" step="0.01" required placeholder="2.5">
+    <br>
+    <label for="time">貸款期限 (年):</label>
+    <input type="number" id="time" name="time" required placeholder="20">
+    <br>
+    <div class="buttons">
+      <button type="button" id="calc">計算利息</button>
+      <button type="button" onclick="reset()">重置輸入</button>
+    </div>
+  </form>
+  <div id="result" style="margin-top: 20px;"></div>
+
+  <script>
+    const principalEl = document.querySelector('#principal');  //本金元件
+    const rateEl = document.querySelector('#rate');  //年利率元件
+    const timeEl = document.querySelector('#time');  //貸款元件
+    const calcEl = document.querySelector('#calc') // 計算利息元件
+
+    console.log(principalEl, rateEl, timeEl, calcEl);
+    // calcEl.calcEl.addEventListener 為計算利息元件新增監聽事件
+    // "click" 代表點擊事件, () => {} 代表匿名函式
+    calcEl.addEventListener("click", () => {
+      // console.log("click!");
+      let principal = principalEl.value;
+      let rate = rateEl.value;
+      let time = timeEl.value;
+
+      let months = time * 12;
+      let month_rate = rate / 12 / 100;
+
+      // 1. 計算每個月應還本金
+      let month_pay = Math.round(principal / months); // Math.round() 取整數
+
+      // 2. 計算每個月應還利息
+      for (let i = 0; i < months; i++) {
+        // 計算利息
+        let interest = Math.round(principal * month_rate);
+        // 本金減去每個月應還本金
+        principal -= month_pay;
+        if (i == months - 1) {
+          console.log(i + 1, month_pay, interest, month_pay + interest + principal, 0);
+        } else {
+          // 每月應還(本金+利息),剩餘貸款金額
+          console.log(i + 1, month_pay, interest, month_pay + interest, principal);
+        }
+
+      }
+
+      //console.log(principal, rate, time, months, month_rate, month_pay);
+    });
+    // 重置輸入 函式
+    function reset() {
+      principalEl.innerHTML = "";
+      rateEl.innerHTML = "";
+      timeEl.innerHTML = "";
+    }
+
+
+
+
+
+  </script>
+
+
+
+</body>
+
+</html>
