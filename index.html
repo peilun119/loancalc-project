@@ -94,15 +94,34 @@
       <button type="button" onclick="reset()">重置輸入</button>
     </div>
   </form>
-  <div id="result" style="margin-top: 20px;"></div>
+  <div id="result" style="margin-top: 20px;">
+    <h1>貸款金額: 總利息支出: 總金額:</h1>
+  </div>
+
+  <table id="resultTable">
+    <thead>
+      <tr>
+        <th>期別</th>
+        <th>攤還本金</th>
+        <th>攤還利息</th>
+        <th>月付金</th>
+        <th>貸款餘額</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
 
   <script>
     const principalEl = document.querySelector('#principal');  //本金元件
     const rateEl = document.querySelector('#rate');  //年利率元件
     const timeEl = document.querySelector('#time');  //貸款元件
-    const calcEl = document.querySelector('#calc') // 計算利息元件
+    const calcEl = document.querySelector('#calc'); // 計算利息元件
+    const resultEl = document.querySelector('#result'); // result 區塊
+    const resultTableEl = document.querySelector('#resultTable tbody'); // resultTable 表格
 
-    console.log(principalEl, rateEl, timeEl, calcEl);
+    console.log(principalEl, rateEl, timeEl, resultTableEl);
     // calcEl.calcEl.addEventListener 為計算利息元件新增監聽事件
     // "click" 代表點擊事件, () => {} 代表匿名函式
     calcEl.addEventListener("click", () => {
@@ -117,20 +136,29 @@
       // 1. 計算每個月應還本金
       let month_pay = Math.round(principal / months); // Math.round() 取整數
 
-      // 2. 計算每個月應還利息
+      // 2. 跑迴圈計算其他欄位
+      let tempHtml = "";
       for (let i = 0; i < months; i++) {
-        // 計算利息
+        // 計算每個月應還利息
         let interest = Math.round(principal * month_rate);
         // 本金減去每個月應還本金
         principal -= month_pay;
+
+        tempHtml += "<tr>";
         if (i == months - 1) {
-          console.log(i + 1, month_pay, interest, month_pay + interest + principal, 0);
+          tempHtml += `<td>${i + 1}</td><td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest + principal}</td><td>${0}</td>`;
+          //tempHtml = `${i + 1} , ${month_pay} , ${interest} , ${month_pay + interest + principal} , 0`;
+          //console.log(i + 1, month_pay, interest, month_pay + interest + principal, 0);
         } else {
           // 每月應還(本金+利息),剩餘貸款金額
-          console.log(i + 1, month_pay, interest, month_pay + interest, principal);
+          tempHtml += `<td>${i + 1}</td><td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest}</td><td>${principal}</td>`;
+          //tempHtml = `${i + 1} , ${month_pay} , ${interest} , ${month_pay + interest} , ${principal}`;
+          //console.log(i + 1, month_pay, interest, month_pay + interest, principal);
         }
+        tempHtml += "</tr>";
 
       }
+      resultTableEl.innerHTML = tempHtml;
 
       //console.log(principal, rate, time, months, month_rate, month_pay);
     });
