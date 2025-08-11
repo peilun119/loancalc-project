@@ -89,13 +89,14 @@
     <label for="time">貸款期限 (年):</label>
     <input type="number" id="time" name="time" required placeholder="20">
     <br>
+    <!-- button 標籤的 type="summit" 會清掉資料，適合後端使用，type="button" 不會清資料，適合前端使用 -->
     <div class="buttons">
       <button type="button" id="calc">計算利息</button>
       <button type="button" onclick="reset()">重置輸入</button>
     </div>
   </form>
   <div id="result" style="margin-top: 20px;">
-    <h1>貸款金額: 總利息支出: 總金額:</h1>
+    <h1>貸款金額:0 總利息支出:0 總金額:0</h1>
   </div>
 
   <table id="resultTable">
@@ -130,17 +131,19 @@
       let rate = rateEl.value;
       let time = timeEl.value;
 
-      let months = time * 12;
-      let month_rate = rate / 12 / 100;
+      let months = time * 12;  // 將年換算為月份
+      let month_rate = rate / 12 / 100;  // 將年利率換算成月利率%
 
       // 1. 計算每個月應還本金
-      let month_pay = Math.round(principal / months); // Math.round() 取整數
+      let month_pay = Math.round(principal / months); // Math.round(本金/總月數) 取整數
 
       // 2. 跑迴圈計算其他欄位
       let tempHtml = "";
+      let total_interest = 0; // 計算總利息
+      let pay_total = 0;  // 計算本金+總利息
       for (let i = 0; i < months; i++) {
         // 計算每個月應還利息
-        let interest = Math.round(principal * month_rate);
+        let interest = Math.round(principal * month_rate); // Math.round(本金*月利率) 取整數
         // 本金減去每個月應還本金
         principal -= month_pay;
 
@@ -150,15 +153,18 @@
           //tempHtml = `${i + 1} , ${month_pay} , ${interest} , ${month_pay + interest + principal} , 0`;
           //console.log(i + 1, month_pay, interest, month_pay + interest + principal, 0);
         } else {
-          // 每月應還(本金+利息),剩餘貸款金額
+          // 每月應還 month_pay + interest(本金+利息),剩餘貸款金額
           tempHtml += `<td>${i + 1}</td><td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest}</td><td>${principal}</td>`;
           //tempHtml = `${i + 1} , ${month_pay} , ${interest} , ${month_pay + interest} , ${principal}`;
           //console.log(i + 1, month_pay, interest, month_pay + interest, principal);
         }
         tempHtml += "</tr>";
 
+        total_interest += interest;
+        pay_total = Number(principalEl.value) + Number(total_interest);
       }
       resultTableEl.innerHTML = tempHtml;
+      resultEl.innerHTML = `<h1>貸款金額:${principalEl.value} 總利息支出:${total_interest} 總金額:${pay_total}</h1>`;
 
       //console.log(principal, rate, time, months, month_rate, month_pay);
     });
