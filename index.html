@@ -73,6 +73,37 @@
     thead {
       background-color: #f2f2f2;
     }
+
+    #result {
+      background-color: rgb(165, 165, 235);
+      display: inline-block;
+    }
+
+    #result h1 {
+      color: rgb(241, 226, 14);
+    }
+
+    #tableContainer {
+      /* 增加scoll bar */
+      max-height: 500px;
+      overflow-y: auto;
+
+      border: 1px solid black;
+      width: 70%;
+      margin: 0 auto;
+    }
+
+    @media screen and (max-width:1024px) {
+      #tableContainer {
+        width: 80%;
+      }
+    }
+
+    @media screen and (max-width:600px) {
+      #tableContainer {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -92,27 +123,29 @@
     <!-- button 標籤的 type="summit" 會清掉資料，適合後端使用，type="button" 不會清資料，適合前端使用 -->
     <div class="buttons">
       <button type="button" id="calc">計算利息</button>
-      <button type="button" onclick="reset()">重置輸入</button>
+      <button type="button" onclick="reset_input()">重置輸入</button>
     </div>
   </form>
   <div id="result" style="margin-top: 20px;">
-    <h1>貸款金額:0 總利息支出:0 總金額:0</h1>
+    <!-- <h1>貸款金額:0 總利息支出:0 總金額:0</h1> -->
   </div>
 
-  <table id="resultTable">
-    <thead>
-      <tr>
-        <th>期別</th>
-        <th>攤還本金</th>
-        <th>攤還利息</th>
-        <th>月付金</th>
-        <th>貸款餘額</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div id="tableContainer">
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>期別</th>
+          <th>攤還本金</th>
+          <th>攤還利息</th>
+          <th>月付金</th>
+          <th>貸款餘額</th>
+        </tr>
+      </thead>
+      <tbody>
 
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 
   <script>
     const principalEl = document.querySelector('#principal');  //本金元件
@@ -169,10 +202,12 @@
       //console.log(principal, rate, time, months, month_rate, month_pay);
     });
     // 重置輸入 函式
-    function reset() {
+    function reset_input() {
       principalEl.innerHTML = "";
       rateEl.innerHTML = "";
       timeEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultTableEl.innerHTML = "";
     }
 
 
